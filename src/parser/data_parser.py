@@ -1,6 +1,8 @@
 from sklearn.datasets import load_iris
 from pathlib import Path
-from iris import Iris
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
 
 class DataParser:
     def __init__(self, path: str) -> None:
@@ -16,6 +18,13 @@ class DataParser:
             df.to_csv(csv_path, index=False)
     
     def parse(self):
-        with open(self.path, 'r') as csvfile:
-            data = csvfile.read()
-        return data            
+        data = pd.read_csv(self.path)
+        carac = data.drop(columns=['target']).values
+        species = data['target'].values
+        return carac, species 
+    
+    def split_data(self,features, labels, test_size=0.2, random_state=82): 
+        X_train, X_test, y_train, y_test = train_test_split(
+            features, labels, test_size=test_size, random_state=random_state
+        )
+        return X_train, X_test, y_train, y_test       

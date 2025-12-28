@@ -1,4 +1,3 @@
-kaggle
-kagglehub
 scikit-learn
 pandas
+numpy
