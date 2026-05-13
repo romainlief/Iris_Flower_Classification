@@ -12,12 +12,12 @@ class GaussianNaiveBayes:
             Calculates the Gaussian probability density function for a given value, mean, and standard deviation.
 
         Args:
-            x (_type_): The value for which to calculate the probability.
-            mean (_type_): The mean of the distribution.
-            stdev (_type_): The standard deviation of the distribution.
+            x (np.ndarray): The value for which to calculate the probability.
+            mean (np.ndarray): The mean of the distribution.
+            stdev (np.ndarray): The standard deviation of the distribution.
 
         Returns:
-            _type_: The calculated probability density for the given value, mean, and standard deviation.
+            np.ndarray: The calculated probability density for the given value, mean, and standard deviation.
         """
         return (1 / (np.sqrt(2 * np.pi) * stdev)) * np.exp(
             -((x - mean) ** 2 / (2 * stdev**2))
@@ -59,9 +59,9 @@ class GaussianNaiveBayes:
             X (np.ndarray): The input features, shape (n_samples, n_features).
 
         Returns:
-            _type_: The predicted class labels, shape (n_samples,).
+            np.ndarray: The predicted class labels, shape (n_samples,).
         """
-        predictions = []
+        predictions = np.array([])
         for x in X:
             probabilities: dict[str, float] = {}
             if self.classes is not None:
@@ -72,19 +72,20 @@ class GaussianNaiveBayes:
 
                     likelihood = np.prod(self.__calculate_probability(x, mean, stdev))
                     probabilities[cls] = likelihood * prior
-            predictions.append(max(probabilities, key=probabilities.get))  # type: ignore
+            predictions = np.append(predictions, max(probabilities, key=probabilities.get))  # type: ignore
         return predictions
 
-    def accuracy_metric(self, y_true, y_pred):
+    def accuracy_metric(self, y_true: np.ndarray, y_pred: np.ndarray):
         """
             Calculates the accuracy of the predictions by comparing the true labels with the predicted labels.
 
         Args:
-            y_true (_type_): The true labels.
-            y_pred (_type_): The predicted labels.
+            y_true (np.ndarray): The true labels.
+            y_pred (np.ndarray): The predicted labels.
 
         Returns:
-            _type_: The accuracy of the predictions.
+            float: The accuracy of the predictions.
         """
         correct = sum(1 for i in range(len(y_true)) if y_true[i] == y_pred[i])
-        return correct / len(y_true)
+        metric = correct / len(y_true)
+        return metric
